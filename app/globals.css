@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --background: #050507;
+  --foreground: #f6eee2;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.r3f-stage {
+  bottom: 0;
+  height: 100dvh;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+}
+
+.r3f-stage canvas {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+::selection {
+  background: rgba(217, 184, 115, 0.32);
+}
+
+.experience-shell {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(217, 184, 115, 0.16), transparent 26rem),
+    radial-gradient(circle at 18% 76%, rgba(156, 230, 230, 0.08), transparent 22rem),
+    linear-gradient(180deg, #090a0f 0%, #050507 50%, #020203 100%);
+}
+
+.film-grain::after {
+  pointer-events: none;
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 60;
+  opacity: 0.075;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  animation: grain 7s steps(10) infinite;
+}
+
+.countdown-glyph {
+  text-shadow:
+    0 0 18px rgba(255, 203, 122, 0.9),
+    0 0 90px rgba(255, 118, 62, 0.45),
+    0 0 160px rgba(156, 230, 230, 0.18);
+}
+
+.happy-letter {
+  display: inline-block;
+  transform-origin: 50% 70%;
+  text-shadow:
+    0 0 22px rgba(246, 238, 226, 0.7),
+    0 0 84px rgba(217, 184, 115, 0.38);
+}
+
+.reveal-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
