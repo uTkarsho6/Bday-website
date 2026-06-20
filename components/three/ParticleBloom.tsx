@@ -44,7 +44,7 @@ export default function ParticleBloom({ phase }: { phase: ExperiencePhase }) {
       <PointMaterial
         ref={material}
         transparent
-        color={phase === "finale" ? "#f6eee2" : "#ffbd74"}
+        color="#f6eee2"
         size={0.022}
         sizeAttenuation
         depthWrite={false}

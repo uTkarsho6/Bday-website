@@ -68,51 +68,8 @@ export function playExplosion() {
 
     const now = ctx.currentTime;
 
-    const bufferSize = ctx.sampleRate * 2.0;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.Q.setValueAtTime(1, now);
-    filter.frequency.setValueAtTime(800, now);
-    filter.frequency.exponentialRampToValueAtTime(20, now + 1.5);
-
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.28, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
-
-    noise.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
-
-    noise.start(now);
-    noise.stop(now + 2.0);
-
-    const sparkNoise = ctx.createBufferSource();
-    sparkNoise.buffer = buffer;
-
-    const sparkFilter = ctx.createBiquadFilter();
-    sparkFilter.type = "highpass";
-    sparkFilter.frequency.setValueAtTime(3500, now);
-
-    const sparkGain = ctx.createGain();
-    sparkGain.gain.setValueAtTime(0.12, now);
-    sparkGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
-
-    sparkNoise.connect(sparkFilter);
-    sparkFilter.connect(sparkGain);
-    sparkGain.connect(ctx.destination);
-
-    sparkNoise.start(now);
-    sparkNoise.stop(now + 0.7);
-
+    // Pure chime chord only — no noise/crackle.
+    // The visual explosion carries the impact; audio provides a tonal bloom.
     const playChime = (freq: number, delay: number, dur: number) => {
       const osc = ctx.createOscillator();
       const oscGain = ctx.createGain();
@@ -129,7 +86,7 @@ export function playExplosion() {
       osc.stop(now + delay + dur + 0.1);
     };
 
-    playChime(523.25, 0.0, 1.4);
+    playChime(523.25, 0.0,  1.4);
     playChime(659.25, 0.08, 1.6);
     playChime(783.99, 0.16, 1.5);
     playChime(987.77, 0.24, 1.8);

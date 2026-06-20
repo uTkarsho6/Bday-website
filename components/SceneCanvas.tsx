@@ -14,21 +14,42 @@ export type ExperiencePhase = "landing" | "ignition" | "countdown" | "explosion"
 function CameraRig({ phase }: { phase: ExperiencePhase }) {
   const { camera, pointer } = useThree();
   const target = useMemo(() => new THREE.Vector3(), []);
+  const lookAtTarget = useMemo(() => new THREE.Vector3(), []);
+  const smoothPointer = useMemo(() => new THREE.Vector2(), []);
   const shouldReduceMotion = useReducedMotion();
   const explosionStartTime = useRef<number | null>(null);
+  // Smooth envelope: 1 = full drift, 0 = no drift (countdown stillness = drama)
+  const driftEnvelope = useRef(1.0);
 
   useFrame((state, delta) => {
+    const t = state.clock.elapsedTime;
     const finale = phase === "finale";
     const basePos = finale ? designTokens.camera.reveal : designTokens.camera.landing;
 
+    // Slow pointer smoothing — heavy lag = cinematic inertia
+    smoothPointer.x = THREE.MathUtils.lerp(smoothPointer.x, pointer.x, 1 - Math.pow(0.008, delta));
+    smoothPointer.y = THREE.MathUtils.lerp(smoothPointer.y, pointer.y, 1 - Math.pow(0.008, delta));
+
+    // Drift envelope: fades to 0 during countdown (absolute stillness = tension)
+    const targetEnvelope = (phase === "countdown" || phase === "explosion") ? 0.0 : 1.0;
+    driftEnvelope.current = THREE.MathUtils.lerp(driftEnvelope.current, targetEnvelope, 1 - Math.pow(0.005, delta));
+    const env = shouldReduceMotion ? 0 : driftEnvelope.current;
+
+    // Autonomous cinematic drift: two superimposed sinusoids with prime-ratio periods
+    // for a non-repeating, organic breathing quality
+    const driftX = (Math.sin(t * 0.071) * 0.038 + Math.cos(t * 0.041) * 0.022) * env;
+    const driftY = (Math.sin(t * 0.053) * 0.028 + Math.cos(t * 0.083) * 0.016) * env;
+    // Very subtle Z breath — camera gently moves toward/away from the cake
+    const driftZ = Math.sin(t * 0.037) * 0.018 * env;
+
+    // Explosion shake
     let shakeX = 0;
     let shakeY = 0;
-
     if (phase === "explosion" && !shouldReduceMotion) {
       if (explosionStartTime.current === null) {
-        explosionStartTime.current = state.clock.elapsedTime;
+        explosionStartTime.current = t;
       }
-      const elapsed = state.clock.elapsedTime - explosionStartTime.current;
+      const elapsed = t - explosionStartTime.current;
       const decay = Math.max(0, 1 - elapsed / 1.2);
       const shakeTime = elapsed * 75.0;
       shakeX = Math.sin(shakeTime) * 0.08 * decay;
@@ -37,13 +58,25 @@ function CameraRig({ phase }: { phase: ExperiencePhase }) {
       explosionStartTime.current = null;
     }
 
+    // Compose position: base + drift + mouse parallax + shake
     target.set(
-      basePos[0] + pointer.x * 0.28 + shakeX,
-      basePos[1] + (finale ? 0 : pointer.y * 0.12) + shakeY,
-      basePos[2]
+      basePos[0] + driftX + smoothPointer.x * 0.14 + shakeX,
+      basePos[1] + driftY + (finale ? 0 : smoothPointer.y * 0.07) + shakeY,
+      basePos[2] + driftZ
     );
-    camera.position.lerp(target, 1 - Math.pow(0.035, delta));
-    camera.lookAt(pointer.x * 0.24 + shakeX * 1.5, (finale ? 0.18 : 0.66) + shakeY * 1.5, 0);
+    // Slow lerp = heavy cinematic inertia
+    camera.position.lerp(target, 1 - Math.pow(0.022, delta));
+
+    // Gaze drift: lookAt wanders on a separate slower sinusoid
+    // The camera feels like it is gently surveying the scene, not locked-on
+    const gazeDriftX = Math.sin(t * 0.047) * 0.035 * env;
+    const gazeDriftY = Math.cos(t * 0.031) * 0.02 * env;
+    lookAtTarget.set(
+      smoothPointer.x * 0.12 + gazeDriftX + shakeX * 1.5,
+      (finale ? 0.18 : 0.78) + gazeDriftY + shakeY * 1.5,
+      0
+    );
+    camera.lookAt(lookAtTarget.x, lookAtTarget.y, lookAtTarget.z);
   });
 
   return null;

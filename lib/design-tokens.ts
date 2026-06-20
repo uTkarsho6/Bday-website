@@ -15,7 +15,7 @@ export const designTokens = {
     quick: 0.36
   },
   camera: {
-    landing: [0, 1.35, 7.2],
-    reveal: [0, 0.7, 9.2]
+    landing: [0, 1.1, 8.0],
+    reveal: [0, 0.65, 9.6]
   }
 } as const;

@@ -408,3 +408,174 @@ Re-orchestrated the GSAP countdown timeline for high-fidelity cinematic assembly
 - Number 2 is framed by three sweeping champagne light trails slicing horizontally.
 - Number 1 is built by 18 orbital fragments slamming radially into place with an elastic drop-bounce.
 - The 3D Cake model's position was shifted vertically upward (`y=-0.22`) to perfectly center it within the frame.
+
+═══════════════════════════════════════
+VISUAL POLISH PASS — PRIORITY 1: LANDING COMPOSITION
+═══════════════════════════════════════
+
+Completed: Landing Composition Rework
+
+Files Modified:
+- [BirthdayExperience.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/BirthdayExperience.tsx)
+- [SceneCanvas.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/SceneCanvas.tsx)
+- [lib/design-tokens.ts](file:///Users/utkarshpradippatil/Documents/HBD%20website/lib/design-tokens.ts)
+- [app/globals.css](file:///Users/utkarshpradippatil/Documents/HBD%20website/app/globals.css)
+
+Changes Made:
+1. **Typography relocated** — text moved from center-bottom to far bottom-left, left-aligned (editorial layout). Hierarchy: eyebrow → headline → CTA.
+2. **Headline reduced** — `clamp(1.45rem, 3.2vw, 2.6rem)` with `font-light`, color at `pearl/80`. Now whispers, not shouts.
+3. **Eyebrow added** — `text-pearl/30`, `tracking-[0.38em]`, extremely quiet. Luxury editorial marker.
+4. **"waiting" word accent** — champagne/70 color with italic em tag for editorial color accent.
+5. **CTA button refined** — inline-flex with a subtle arrow line (`h-px w-5`), border reduced from pearl/18 to pearl/12, background lowered from 0.065 to 0.05 opacity. Less visual mass.
+6. **Vignette deepened** — radial now ellipse 60%×55% centered at 50% 42%, outer opacity 0.88. Bottom fade increased to h-56/90%. Creates a "dark well" for text.
+7. **Camera pulled back** — landing Z from 7.2 → 8.0, Y from 1.35 → 1.1. More breathing room around cake.
+8. **LookAt raised** — landing lookAt Y from 0.66 → 0.78 (frame the flame). Cinematic upward gaze.
+9. **Mouse parallax reduced** — position: 0.28 → 0.18, lookAt: 0.24 → 0.16. Gentler, breathing feel.
+10. **Background spotlight tightened** — ellipse 40%×35% at 50% 30%, 0.12 opacity. Acts as precise stage cone above cake.
+
+Visual hierarchy achieved:
+  Cake → Atmosphere → Text (not Text → Cake)
+
+Status: AWAITING TEST (PASS/FAIL)
+
+═══════════════════════════════════════
+VISUAL POLISH PASS — PRIORITY 2: CAMERA CHOREOGRAPHY
+═══════════════════════════════════════
+
+Completed: Cinematic Camera Drift
+
+Files Modified:
+- [SceneCanvas.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/SceneCanvas.tsx)
+
+Changes Made:
+1. **Autonomous drift** — Two superimposed sinusoids with prime-ratio periods (0.071, 0.041 for X; 0.053, 0.083 for Y) create a non-repeating organic breathing quality. Total amplitude ~0.06 units.
+2. **Z breath** — A single slow sinusoid (period ~0.037 rad/s) gently moves the camera toward/away from the cake. Amplitude 0.018 units.
+3. **Gaze drift** — The lookAt point drifts on a third, separate sinusoid (0.047 X, 0.031 Y) — the camera feels like it is gently surveying rather than locked-on.
+4. **Smooth pointer** — Mouse input now smoothed with a very slow lerp (`pow(0.008, delta)`) so the camera has genuine inertia. No more instant snap.
+5. **Drift envelope** — During `countdown` and `explosion` phases, drift fades to 0 via a slow lerp (`pow(0.005, delta)`) creating absolute stillness that heightens tension. Restores on finale.
+6. **Heavier camera inertia** — Position lerp slowed from `pow(0.035)` to `pow(0.022, delta)`. Camera moves like a heavy steadicam.
+7. **Reduced mouse influence** — Position: 0.18 → 0.14. LookAt: 0.16 → 0.12. Mouse is now a gentle modulation, not the dominant force.
+8. **prefers-reduced-motion safe** — All drift set to env=0 when reduced motion is detected.
+
+Status: PASS
+
+═══════════════════════════════════════
+VISUAL POLISH PASS — PRIORITY 3: COUNTDOWN QUALITY
+═══════════════════════════════════════
+
+Completed: Age reveal — cinematic 5-phase animation
+
+Files Modified:
+- [AgeRevealOverlay.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/AgeRevealOverlay.tsx)
+
+Changes Made:
+1. **Phase 1 — Particles gather**: 80 particles placed on two concentric orbital rings at radii 420px and 260px. Each spirals inward to a tight cluster around center via staggered `power3.out` easing. Total gather duration ~1.9s.
+2. **Phase 2 — Number forms**: Digits materialize from `blur(28px) + scale(1.45)` with a staggered 0.18s per digit via `expo.out`. Feels like condensing light.
+3. **Phase 3 — Light shimmer**: A translucent golden gradient bar sweeps left→right across the number (0.55s total). As it passes, digits pulse to `brightness(1.8)` + champagne color, then cool back to pearl.
+4. **Phase 4 — Dissolve**: Digits scatter outward — even digits go up, odd go down, each pushed sideways proportional to position. Simultaneously particles scatter back to their ring origins. Both fade with `power3.in`/`power4.in`.
+5. **Phase 5 — Explosion**: `onExplode` fires mid-dissolve for dramatic overlap. Overlay fades out.
+6. **Shimmer element**: New `shimmer-sweep` div in DOM — wide transparent gradient bar, `blur(4px)`, positioned absolute center.
+7. **Particle sizing**: Inner ring particles are larger (2-4px) for depth. Outer ring smaller (1-2.5px). Individual glow via inline boxShadow.
+8. **Reduced motion**: All particle/shimmer/scatter animations skipped. Simple crossfade only.
+
+Status: PASS
+
+═══════════════════════════════════════
+VISUAL POLISH PASS — PRIORITY 4: FINALE REVEAL
+═══════════════════════════════════════
+
+Completed: Finale reveal — emotional cinematic reveal
+
+Files Modified:
+- [FinalReveal.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/FinalReveal.tsx)
+
+Changes Made:
+1. **Section fade slowed** — 1.1s → 1.8s with expo ease. The reveal emerges, not cuts.
+2. **Eyebrow replaces h2** — "Dear {name}" is now `text-[0.6rem] tracking-[0.42em] text-pearl/35`. Barely visible, sets emotional context before the headline lands.
+3. **Headline timing restructured** — First letter arrives at 1.2s (was 0.18s). Stagger 0.07s per letter (was 0.18+0.055). Every letter gets to breathe and land individually.
+4. **Headline reduced** — `clamp(1.9rem, 5.5vw, 5.8rem)` font-weight 400 (was 6.5vw, medium). Lighter, more editorial.
+5. **Thin rule added** — A `h-px` champagne gradient line (scaleX enters at 2.8s) separates the headline from the body. Creates visual pause.
+6. **Body copy delayed to 3.0s** — Was 1.05s delayChildren. Now the paragraph only begins appearing after the headline has completely settled. The reveal is sequential, not simultaneous.
+7. **Body opacity reduced** — `text-pearl/60` (was /78). More recessive against the headline.
+8. **Glow disc smaller and subtler** — `min(36rem,80vw)` size, 0.10 opacity (was 42rem, 0.19). No longer competing with scene.
+9. **Entry flare softened** — max opacity 0.70 → 0.25, blur increased. Whisper of light, not a flash.
+10. **Parallax halved** — ±8px/±5px (was ±18px/±10px). The parallax is now atmospheric, not distracting.
+11. **Sparks reduced** — 90 → 48. Non-uniform positions via deterministic hash (no hydration risk). Each spark is 2px not 4px. Individual opacity cap at 0.55 (was 0.8).
+12. **Wishing phase refined** — Input placeholder uses ellipsis, font-light, tracking added. Button smaller and quieter.
+
+Status: PASS
+
+═══════════════════════════════════════
+VISUAL POLISH PASS — PRIORITY 5: CINEMATIC POST PROCESSING
+═══════════════════════════════════════
+
+Completed: CSS-based cinematic post-processing stack
+
+Files Modified:
+- [BirthdayExperience.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/BirthdayExperience.tsx)
+- [app/globals.css](file:///Users/utkarshpradippatil/Documents/HBD%20website/app/globals.css)
+
+Approach: No new dependencies. All effects via CSS compositing layers above the Three.js canvas. mix-blend-mode:screen targets only bright pixels, naturally simulating bloom without affecting dark areas.
+
+Layers (z-index order):
+1. .scene-grade (z:0) — contrast(1.055) saturate(1.1) brightness(0.97) on canvas wrapper.
+2. Bloom (z:11) — mix-blend-mode:screen warm radial glow, flame-aligned. Phase-aware intensity (landing=0.08, active=0.22, finale=0.10). 1.4s CSS transition.
+3. Chromatic tone (z:12) — Cool blue top cast + warm amber bottom lift. Lens temperature falloff.
+4. Cinematic vignette (z:13) — Ellipse 58%x52%, outer opacity 0.92. Top h-40/72% + bottom h-60/94% edge fades.
+5. Atmospheric haze (z:14) — Inward radial creates depth recession toward screen edges.
+
+Status: PASS
+
+═══════════════════════════════════════
+CINEMATIC MUSIC & TIMELINE INTEGRATION
+═══════════════════════════════════════
+
+Completed: Integrated the custom track `atlasaudio` from Downloads with dynamic volume orchestration and a custom 21-second start/loop offset synced to the experience timeline, resolved compilation type warnings, and verified production build correctness.
+
+Files Modified:
+- [BirthdayExperience.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/BirthdayExperience.tsx)
+- [AgeRevealOverlay.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/AgeRevealOverlay.tsx)
+- [FinalReveal.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/FinalReveal.tsx)
+- [ParticleBloom.tsx](file:///Users/utkarshpradippatil/Documents/HBD%20website/components/three/ParticleBloom.tsx)
+- [context.md](file:///Users/utkarshpradippatil/Documents/HBD%20website/context.md)
+
+Changes Made:
+1. **Custom Music Integration (atlasaudio)**:
+   - Coerced and copied the custom `atlasaudio-instrumental-519455.mp3` from the user's Downloads folder to `public/assets/audio/reveal-theme.mp3`.
+   - Set the audio playback start time to exactly 21 seconds (`currentTime = 21`, representing the user-requested "0.21s" clock timestamp) for initial start and unmute triggers.
+   - Removed the browser's default `loop` attribute and implemented a manual `ended` listener that loops the track back to the 21-second mark, preserving the musical pacing.
+   - Programmed immediate, low-volume background audio initialization (`volume: 0.16`) upon clicking "Begin Experience" or un-muting to create an atmospheric sound bed.
+   - Built a dynamic GSAP volume coordinator that swells the audio to full cinema volume (`volume: 0.82`) over a 4.0-second fade duration when the user transitions to the `finale` phase.
+2. **Interactive Audio Controls**:
+   - Synced the mute toggle to immediately play/pause or mute/unmute the active backing track to prevent autoplay blocks.
+   - Configured the audio to remain completely paused and muted during the landing screen phase, only starting playback once the user clicks "Begin" or "Skip" to align with modern web standard experiences.
+3. **Recipient Name Highlight**:
+   - Styled the recipient's name in the `FinalReveal` reading intro using the editorial `text-champagne` gold color, bold weight, and a soft golden glow backdrop drop-shadow (`drop-shadow-[0_0_8px_rgba(217,184,115,0.4)]`).
+4. **Cinematic Guidance Prompt**:
+   - Integrated an elegant, slow-fading "wait for it..." prompt beneath the main body text in `FinalReveal.tsx`. The text automatically fades in at `6.5s` and fades out at `9.7s`, guiding the user smoothly into the "Make a Wish" input transition.
+5. **Background Consistency & Transition Polishing**:
+   - Aligned the background bloom glow across all phases by setting the default landing and idle `pp-bloom` gradient in `BirthdayExperience.tsx` to match the final reveal's champagne gold radial glow (`rgba(217,184,115,0.10)`). The glow only shifts to warm orange during the active candle ignition phase.
+   - Fixed the stardust particles color in `ParticleBloom.tsx` to be champagne white (`#f6eee2`) across all phases. This removes the abrupt color pop from amber to white during the transition to the final reveal card.
+6. **Mobile Responsive UI & Layout Enhancements**:
+   - Centered the landing text and "Begin" button horizontally on mobile viewports while retaining standard left-alignment on desktop viewports.
+   - Removed the word "Intro" from the skip button to make it a clean, premium "Skip" prompt, and moved it to the top-right corner (`absolute top-7 right-6`) to prevent overlapping with custom mobile browser navigation overlays (like the Naver "N" button).
+   - Removed the subtle horizontal arrow line (dash) from the "Begin" button to deliver a cleaner pill styling.
+   - Repositioned the personal message to float elegantly downside at the bottom-center of the viewport (`bottom-[8vh]`), cleanly separated from the center "wish is among the stars" title.
+   - Removed the gold horizontal divider lines from the "HAPPY BIRTHDAY" screen and the final "Your wish is among the stars" screen.
+   - Removed the static center star dot from the final reveal screen.
+   - Made input borders and text fields extremely faded and subtle (`border-pearl/[0.03]` and `placeholder-pearl/15`) to blend seamlessly into the night sky background.
+   - Cleaned up debug log output from the terminal and browser console.
+7. **Type-Safety & Build Integrity**:
+   - Declared explicit TypeScript type signatures for GSAP functional parameters (such as `(i: number, target: HTMLElement)`) in `AgeRevealOverlay.tsx` to fix compiler type errors.
+   - Successfully compiled the Next.js production build (`npm run build`) after purging the webpack resolver cache.
+
+8. **Personalization Architecture (Approved & Implemented)**:
+   - Installed `firebase` SDK client package.
+   - Initialized database configurations in `lib/firebase.ts` with client environment variables. Included dynamic checking (`isFirebaseConfigured`) to gracefully fallback to local defaults if API keys are missing.
+   - Updated `app/page.tsx` to read the search query parameter `id` (maps to `configId`, defaulting to `manasvi-20`).
+   - Refactored `BirthdayExperience.tsx` to fetch personalization parameters (recipient name, age, landing messages, music track configurations, and creator/sender personal messages) dynamically from the `/birthdayConfigs/{configId}` Firestore document, and parse asterisks (e.g. `*waiting*`) into golden champagne highlighted text.
+   - Redesigned `FinalReveal.tsx` to implement an intimate 1-to-1 wish reveal. The birthday boy/girl enters their own wish (pre-populated with their name from the config) which is saved to Firestore under `/birthdayConfigs/{configId}/wishes` for the creator (Utkarsh) to receive.
+   - Once submitted, the star shoots to the sky and reveals the creator's personal message (`senderName` and `personalMessage` loaded from the database config) on an elegant gold-bloom glass card, without displaying any public feed of other wishes.
+   - Created a `.env.example` file detailing required environment variables.
+
+Status: PASS

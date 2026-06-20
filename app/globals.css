@@ -50,11 +50,24 @@ button {
   background: rgba(217, 184, 115, 0.32);
 }
 
+/* Canvas grade — subtle contrast + saturation lift simulates camera grade.
+   Gives the Three.js output more perceived richness and depth without post-processing. */
+.scene-grade {
+  filter: contrast(1.055) saturate(1.1) brightness(0.97);
+}
+
+/* Bloom blend layer — screen mode means only bright pixels are affected.
+   The underlying div carries the radial glow; the blend mode does the luminance punch. */
+.pp-bloom {
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
 .experience-shell {
   background:
-    radial-gradient(circle at 50% 22%, rgba(217, 184, 115, 0.16), transparent 26rem),
-    radial-gradient(circle at 18% 76%, rgba(156, 230, 230, 0.08), transparent 22rem),
-    linear-gradient(180deg, #090a0f 0%, #050507 50%, #020203 100%);
+    radial-gradient(ellipse 40% 35% at 50% 30%, rgba(217, 184, 115, 0.12), transparent 100%),
+    radial-gradient(circle at 18% 76%, rgba(156, 230, 230, 0.05), transparent 22rem),
+    linear-gradient(180deg, #070810 0%, #050507 55%, #020203 100%);
 }
 
 .film-grain::after {
@@ -98,4 +111,19 @@ button {
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* Custom subtle scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(246, 238, 226, 0.15);
+  border-radius: 99px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 184, 115, 0.3);
 }
